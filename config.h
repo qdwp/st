@@ -142,11 +142,17 @@ static unsigned int defaultrcs = 257;
 unsigned int defaultitalic = 7;
 unsigned int defaultunderline = 7;
 /*
- * Default shape of cursor
- * 2: Block ("█")
- * 4: Underline ("_")
- * 6: Bar ("|")
- * 7: Snowman ("☃")
+ * https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps-SP-q.1D81
+ * Default style of cursor
+ * 0: Blinking block
+ * 1: Blinking block (default)
+ * 2: Steady block ("█")
+ * 3: Blinking underline
+ * 4: Steady underline ("_")
+ * 5: Blinking bar
+ * 6: Steady bar ("|")
+ * 7: Blinking st cursor
+ * 8: Steady st cursor
  */
 static unsigned int cursorstyle = 3;
 static Rune stcursor = 0x2603; /* snowman (U+2603) */
@@ -184,13 +190,13 @@ static uint forcemousemod = ShiftMask;
  */
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release */
+	{ ShiftMask,            Button4, kscrollup,      {.i = 10} },
+	{ ShiftMask,            Button5, kscrolldown,    {.i = 10} },
 	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
-// 	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
-// 	{ ShiftMask,            Button5, ttysend,        {.s = "\033[6;2~"} },
+	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
 	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },
-	{ XK_ANY_MOD,           Button5, ttysend,        {.s = "\033"} },
-	{ XK_NO_MOD,            Button4, kscrollup,      {.i = 1} },
-	{ XK_NO_MOD,            Button5, kscrolldown,    {.i = 1} },
+	{ ShiftMask,            Button5, ttysend,        {.s = "\033[6;2~"} },
+	{ XK_ANY_MOD,           Button5, ttysend,        {.s = "\005"} },
 };
 
 /* Internal keyboard shortcuts. */
@@ -209,12 +215,12 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
-//	{ ControlMask,          XK_v,           selpaste,       {.i =  0} },
+	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
-	{ MODKEY|ControlMask,   XK_u,           kscrollup,      {.i = -1} },
-	{ MODKEY|ControlMask,   XK_e,           kscrolldown,    {.i = -1} },
-	{ MODKEY,               XK_u,           kscrollup,      {.i = 10} },
-	{ MODKEY,               XK_e,           kscrolldown,    {.i = 10} },
+	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
+	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
+	{ MODKEY,               XK_u,           kscrollup,      {.i =  1} },
+	{ MODKEY,               XK_e,           kscrolldown,    {.i =  1} },
 };
 
 /*
